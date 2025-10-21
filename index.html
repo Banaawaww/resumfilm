@@ -1,0 +1,342 @@
+ <!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Billionaire: Kisah Sukses Taokaenoi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals (Stone) with Amber accent -->
+    <!-- Application Structure Plan: Sebuah laman naratif vertikal (vertical scrolling) yang memandu pengguna melalui perjalanan kronologis Top. Setiap bagian utama (prolog, kegagalan, ide, sukses) dibuat sebagai sebuah 'section' interaktif. Struktur ini dipilih karena paling sesuai untuk menceritakan sebuah kisah dari awal hingga akhir, membuat alur cerita mudah diikuti dan lebih menarik daripada slide statis. Pengguna dapat menggulir secara alami atau menggunakan navigasi untuk melompat ke bagian tertentu. -->
+    <!-- Visualization & Content Choices: 
+        1. Prolog: Teks & Gambar -> Goal: Inform -> Presentasi: Hero section -> Interaksi: Tidak ada, sebagai pengantar.
+        2. Kegagalan Bisnis: Teks & Ikon -> Goal: Compare/Inform -> Presentasi: Kartu interaktif yang dapat diklik -> Interaksi: Klik untuk menampilkan 'Pelajaran' di baliknya -> Justifikasi: Membuat pengguna aktif mencari tahu hikmah dari setiap kegagalan -> Library/Method: Vanilla JS.
+        3. Proses Inovasi: Diagram Alur -> Goal: Organize/Explain -> Presentasi: Diagram alur sederhana berbasis HTML/CSS -> Interaksi: Klik pada setiap tahap untuk menampilkan detail proses -> Justifikasi: Memecah proses kompleks menjadi langkah-langkah yang mudah dipahami -> Library/Method: Vanilla JS.
+        4. Tantangan 7-Eleven: Bar Chart -> Goal: Compare/Quantify -> Presentasi: Chart.js Bar Chart -> Interaksi: Tombol untuk memfilter/menyorot data dan menampilkan konteks teks -> Justifikasi: Memvisualisasikan besarnya tantangan yang dihadapi secara kuantitatif -> Library/Method: Chart.js.
+        5. Pelajaran Bisnis: Daftar Poin -> Goal: Summarize -> Presentasi: Kartu-kartu ringkasan dengan ikon -> Interaksi: Efek hover sederhana -> Justifikasi: Menyajikan kesimpulan utama dengan cara yang menarik secara visual -> Library/Method: CSS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+        .section-fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .section-fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .flip-card { perspective: 1000px; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 1.5rem; border-radius: 1rem; }
+        .flip-card-back { transform: rotateY(180deg); }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 300px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 350px; } }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 scroll-smooth">
+
+    <nav id="navbar" class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl text-amber-600">The Billionaire</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#prolog" class="text-stone-600 hover:bg-amber-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Prolog</a>
+                        <a href="#kegagalan" class="text-stone-600 hover:bg-amber-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Kegagalan</a>
+                        <a href="#ide" class="text-stone-600 hover:bg-amber-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Ide Brilian</a>
+                        <a href="#sukses" class="text-stone-600 hover:bg-amber-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Terobosan</a>
+                        <a href="#pelajaran" class="text-stone-600 hover:bg-amber-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Pelajaran</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <!-- Section 1: Prolog -->
+        <section id="prolog" class="min-h-[80vh] flex items-center justify-center section-fade-in">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-stone-900">Dari Pecandu Game,</h1>
+                <h2 class="text-4xl md:text-6xl font-bold tracking-tight text-amber-600 mt-2">Menjadi Pengusaha Miliarder</h2>
+                <p class="mt-6 max-w-2xl mx-auto text-lg text-stone-600">Sebuah studi kasus interaktif dari kisah nyata Aitthipat Kulapongvanich, pendiri Taokaenoi. Jelajahi perjalanannya dari titik terendah hingga puncak kesuksesan.</p>
+                <div class="mt-10">
+                    <a href="#kegagalan" class="bg-amber-500 text-white font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-amber-600 transition duration-300">Mulai Jelajahi Kisahnya</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Kegagalan -->
+        <section id="kegagalan" class="py-20 section-fade-in">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-stone-900">Jalan Menuju Sukses Penuh Cobaan</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-lg text-stone-600">Sebelum Taokaenoi lahir, Top menghadapi serangkaian kegagalan yang hampir mematahkan semangatnya. Klik setiap kartu untuk melihat pelajaran berharga di baliknya.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div class="flip-card h-64 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front bg-white shadow-xl">
+                             <span class="text-6xl mb-2">🌰</span>
+                            <h3 class="text-2xl font-bold">Bisnis Kacang Mete</h3>
+                            <p class="text-stone-500 mt-2">Masalah: Resep tidak konsisten & produk cepat basi.</p>
+                        </div>
+                        <div class="flip-card-back bg-red-100 text-red-800 shadow-xl">
+                            <h4 class="text-xl font-bold">Pelajaran #1</h4>
+                            <p class="mt-2">Produk yang hebat membutuhkan riset dan konsistensi kualitas. Jangan meremehkan dasar-dasar produksi.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card h-64 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front bg-white shadow-xl">
+                            <span class="text-6xl mb-2">📀</span>
+                            <h3 class="text-2xl font-bold">Jual Beli DVD</h3>
+                            <p class="text-stone-500 mt-2">Pelajaran: Modal habis dan utang bertambah.</p>
+                        </div>
+                        <div class="flip-card-back bg-red-100 text-red-800 shadow-xl">
+                            <h4 class="text-xl font-bold">Pelajaran #2</h4>
+                            <p class="mt-2">Pilih mitra bisnis dengan hati-hati dan pahami risikonya. Kepercayaan buta bisa berakibat fatal.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Ide Brilian -->
+        <section id="ide" class="py-20 section-fade-in">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-stone-900">Lahirnya Sebuah Ide Brilian</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-lg text-stone-600">Di tengah keputusasaan, sebuah ide sederhana muncul dan mengubah segalanya. Ikuti proses inovasi yang dilalui Top.</p>
+            </div>
+            <div class="max-w-5xl mx-auto">
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4 mb-8">
+                    <div id="step1" class="innovation-step bg-white p-6 rounded-lg shadow-lg text-center cursor-pointer border-2 border-amber-500">
+                        <h4 class="font-bold text-lg">1. Sumber Ide</h4>
+                        <p class="text-sm text-stone-500">Rumput laut keluarga</p>
+                    </div>
+                    <div class="text-2xl font-bold text-amber-500 hidden md:block">→</div>
+                    <div class="text-2xl font-bold text-amber-500 md:hidden">↓</div>
+                    <div id="step2" class="innovation-step bg-white p-6 rounded-lg shadow-lg text-center cursor-pointer border-2 border-transparent hover:border-amber-500">
+                        <h4 class="font-bold text-lg">2. Proses Inovasi</h4>
+                        <p class="text-sm text-stone-500">Riset & Eksperimen</p>
+                    </div>
+                    <div class="text-2xl font-bold text-amber-500 hidden md:block">→</div>
+                     <div class="text-2xl font-bold text-amber-500 md:hidden">↓</div>
+                    <div id="step3" class="innovation-step bg-white p-6 rounded-lg shadow-lg text-center cursor-pointer border-2 border-transparent hover:border-amber-500">
+                        <h4 class="font-bold text-lg">3. Hasil Akhir</h4>
+                        <p class="text-sm text-stone-500">Produk siap jual</p>
+                    </div>
+                </div>
+                <div id="innovation-details" class="bg-amber-50 p-6 rounded-lg shadow-inner min-h-[120px] flex items-center justify-center">
+                    <p class="text-center text-amber-800 font-medium">Klik setiap tahap untuk melihat detailnya.</p>
+                </div>
+                <blockquote class="mt-12 text-center">
+                    <p class="text-2xl font-semibold italic text-stone-700">"Kalau kamu tidak menyerah, kamu pasti akan menang."</p>
+                    <footer class="mt-2 text-stone-500">— Prinsip Aitthipat Kulapongvanich</footer>
+                </blockquote>
+            </div>
+        </section>
+
+        <!-- Section 4: Sukses -->
+        <section id="sukses" class="py-20 section-fade-in">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-stone-900">Terobosan Bisnis: Menaklukkan 7-Eleven</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-lg text-stone-600">Mendapatkan kesempatan di 7-Eleven adalah titik balik, namun tantangannya luar biasa besar. Visualisasikan besarnya tantangan yang harus ia hadapi.</p>
+            </div>
+            <div class="bg-white p-4 sm:p-8 rounded-2xl shadow-xl max-w-4xl mx-auto">
+                <div class="chart-container">
+                    <canvas id="challengesChart"></canvas>
+                </div>
+                <div id="chart-context" class="mt-4 text-center text-stone-600 min-h-[40px]">
+                    <p>Pilih salah satu tantangan di bawah untuk melihat detailnya.</p>
+                </div>
+                <div class="flex justify-center items-center space-x-2 sm:space-x-4 mt-4">
+                    <button id="btn-all" class="bg-amber-500 text-white px-4 py-2 rounded-lg font-semibold text-sm">Semua Tantangan</button>
+                    <button id="btn-quality" class="bg-stone-200 text-stone-700 px-4 py-2 rounded-lg font-semibold text-sm">Standar Kualitas</button>
+                    <button id="btn-production" class="bg-stone-200 text-stone-700 px-4 py-2 rounded-lg font-semibold text-sm">Syarat Produksi</button>
+                    <button id="btn-cost" class="bg-stone-200 text-stone-700 px-4 py-2 rounded-lg font-semibold text-sm">Biaya & Modal</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 5: Pelajaran -->
+        <section id="pelajaran" class="py-20 section-fade-in">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-stone-900">Pelajaran Bisnis dari "The Billionaire"</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-lg text-stone-600">Kisah Top bukan hanya inspirasi, tapi juga kumpulan pelajaran bisnis yang berharga bagi siapa saja.</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+                <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+                    <span class="text-4xl">💡</span>
+                    <h3 class="font-bold text-lg mt-4">Inovasi Adalah Kunci</h3>
+                    <p class="text-stone-600 mt-2 text-sm">Selalu cari ide baru dan jangan takut untuk mengubah sesuatu yang sudah ada menjadi lebih baik.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+                    <span class="text-4xl">💪</span>
+                    <h3 class="font-bold text-lg mt-4">Jangan Pernah Menyerah</h3>
+                    <p class="text-stone-600 mt-2 text-sm">Kegagalan adalah bagian dari proses. Ketekunan adalah bahan bakar utama menuju kesuksesan.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+                    <span class="text-4xl">🎯</span>
+                    <h3 class="font-bold text-lg mt-4">Fokus Pada Kualitas</h3>
+                    <p class="text-stone-600 mt-2 text-sm">Produk yang berkualitas akan membangun kepercayaan dan loyalitas pelanggan jangka panjang.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+                    <span class="text-4xl">🚀</span>
+                    <h3 class="font-bold text-lg mt-4">Berani Ambil Risiko</h3>
+                    <p class="text-stone-600 mt-2 text-sm">Terkadang, langkah terbesar dalam bisnis adalah yang paling berisiko. Kalkulasikan, lalu beranikan diri.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-800 text-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
+            <p>&copy; 2025 Analisis Interaktif Film The Billionaire. Dibuat sebagai studi kasus.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fade-in animation for sections
+            const sections = document.querySelectorAll('.section-fade-in');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            sections.forEach(section => observer.observe(section));
+
+            // Innovation steps interaction
+            const innovationSteps = {
+                step1: "<strong>Sumber Ide:</strong> Top terinspirasi dari rumput laut goreng sederhana yang ia cicipi. Ini menunjukkan bahwa ide bisnis besar seringkali datang dari hal-hal kecil di sekitar kita.",
+                step2: "<strong>Proses Inovasi:</strong> Dia melakukan riset dan eksperimen tanpa henti, menghadapi banyak kegagalan seperti rumput laut yang hangus dan tidak renyah, hingga menemukan formula yang sempurna.",
+                step3: "<strong>Hasil Akhir:</strong> Setelah kerja keras, ia berhasil menciptakan produk rumput laut goreng yang renyah, lezat, dan bisa diproduksi secara massal dengan standar kualitas yang tinggi."
+            };
+            const detailsContainer = document.getElementById('innovation-details');
+            const stepElements = document.querySelectorAll('.innovation-step');
+
+            detailsContainer.innerHTML = `<p class="text-center text-amber-800 font-medium">${innovationSteps['step1']}</p>`;
+            
+            stepElements.forEach(step => {
+                step.addEventListener('click', () => {
+                    stepElements.forEach(s => s.classList.remove('border-amber-500'));
+                    step.classList.add('border-amber-500');
+                    detailsContainer.innerHTML = `<p class="text-center text-amber-800 font-medium">${innovationSteps[step.id]}</p>`;
+                });
+            });
+
+            // Chart.js for challenges
+            const ctx = document.getElementById('challengesChart').getContext('2d');
+            const chartData = {
+                labels: ['Standar Kualitas', 'Syarat Produksi', 'Biaya & Modal'],
+                datasets: [{
+                    label: 'Tingkat Kesulitan (skala 1-10)',
+                    data: [8, 9, 10],
+                    backgroundColor: [
+                        'rgba(245, 158, 11, 0.2)', // amber-400
+                        'rgba(212, 172, 13, 0.2)', // amber-500
+                        'rgba(180, 83, 9, 0.2)'  // amber-700
+                    ],
+                    borderColor: [
+                        'rgba(245, 158, 11, 1)',
+                        'rgba(212, 172, 13, 1)',
+                        'rgba(180, 83, 9, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            };
+
+            const challengesChart = new Chart(ctx, {
+                type: 'bar',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 10,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        },
+                        y: {
+                           grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` Tingkat Kesulitan: ${context.raw}/10`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            const chartContext = document.getElementById('chart-context');
+            const chartButtons = {
+                all: document.getElementById('btn-all'),
+                quality: document.getElementById('btn-quality'),
+                production: document.getElementById('btn-production'),
+                cost: document.getElementById('btn-cost'),
+            };
+
+            const chartContextText = {
+                 all: "Setiap aspek merupakan tantangan besar yang harus diatasi Top untuk bisa bekerja sama dengan 7-Eleven.",
+                 quality: "7-Eleven menuntut standar kemasan, rasa, dan kebersihan yang sangat tinggi, memaksa Top merombak total produknya.",
+                 production: "Top diwajibkan memiliki pabrik sendiri dengan sertifikasi dan sistem produksi yang terstandar.",
+                 cost: "Tanpa modal, Top harus menjual aset terakhirnya dan berutang besar untuk membangun pabrik sesuai standar."
+            };
+
+            function updateChart(activeButton, visibleDataIndices) {
+                 Object.values(chartButtons).forEach(btn => {
+                    btn.classList.remove('bg-amber-500', 'text-white');
+                    btn.classList.add('bg-stone-200', 'text-stone-700');
+                 });
+                 activeButton.classList.add('bg-amber-500', 'text-white');
+                 activeButton.classList.remove('bg-stone-200', 'text-stone-700');
+
+                 const fullData = [8, 9, 10];
+                 const newData = fullData.map((d, i) => visibleDataIndices.includes(i) ? d : 0);
+                 challengesChart.data.datasets[0].data = newData;
+                 challengesChart.update();
+                 chartContext.textContent = chartContextText[activeButton.id.split('-')[1]];
+            }
+
+            chartButtons.all.addEventListener('click', () => updateChart(chartButtons.all, [0, 1, 2]));
+            chartButtons.quality.addEventListener('click', () => updateChart(chartButtons.quality, [0]));
+            chartButtons.production.addEventListener('click', () => updateChart(chartButtons.production, [1]));
+            chartButtons.cost.addEventListener('click', () => updateChart(chartButtons.cost, [2]));
+            
+            updateChart(chartButtons.all, [0, 1, 2]);
+
+        });
+    </script>
+</body>
+</html>
